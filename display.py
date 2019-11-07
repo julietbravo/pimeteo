@@ -65,11 +65,37 @@ class LCD:
         for i in range(self.lcd_width):
             self.lcd_byte(ord(message[i]), self.lcd_chr)
 
+    def align(self, var1, val1, unit1, var2, val2, unit2):
+        line_0 = '{0}={1:.1f}{2}'.format(var1, val1, unit1) 
+        line_1 = '{0}={1:.1f}{2}'.format(var2, val2, unit2)
+        pad    = (self.lcd_width - len(line_0) - len(line_1))*' '
+        return '{0}{1}{2}'.format(line_0, pad, line_1)
+
+
+    def set_values(self, time, T1, T2, RH1, RH2, P, CO2):
+        line   = '  {0:02d}/{1:02d}/{2:04d} {3:02d}:{4:02d}'.format(time.day, time.month, time.year, time.hour, time.minute)
+        self.write(line, 0)
+
+        line   = self.align('T1', T1, 'C', 'RH1', RH1, '%')
+        self.write(line, 1)
+
+        line   = self.align('T2', T2, 'C', 'RH2', RH2, '%')
+        self.write(line, 2)
+
+        line   = self.align('P', P, '', 'CO2', CO2, '')
+        self.write(line, 3)
+
 
 if __name__ == '__main__':
 
     lcd = LCD(i2c_addr=0x27, sm_bus=1)
-    lcd.write('hello world!', 0)
-    lcd.write('hello world!', 1)
-    lcd.write('hello world!', 2)
-    lcd.write('hello world!', 3)
+
+    now = datetime.datetime.utcnow()
+    T1 = 21.4
+    T2 = 22.8
+    RH1 = 87.4
+    RH2 = 100
+    P = 1004.2
+    CO2 = 988.4
+
+    lcd.set_values(now, T1, T2, RH1, RH2, P, CO2)
