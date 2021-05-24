@@ -25,6 +25,9 @@ class Timer:
         self.next_log    = round_time_up(now, self.dt_log)
         self.next_update = round_time_up(now, self.dt_update)
 
+        # Log time
+        self.log_time = self.next_log - self.dt_log
+
 
     def now(self):
         return datetime.datetime.utcnow() 
@@ -32,6 +35,7 @@ class Timer:
 
     def do_log(self):
         if self.now() >= self.next_log:
+            self.log_time = self.next_log
             self.next_log += self.dt_log
             return True
         else:
@@ -50,13 +54,13 @@ class Timer:
 
 if __name__ == '__main__':
 
-    timer = Timer(dt_log=30, dt_update=5)
+    timer = Timer(dt_log=30, dt_update=10)
 
     while True:
-        print(datetime.datetime.utcnow().isoformat())
         if timer.do_log():
-            print('Logging!, next={}'.format(timer.next_log.isoformat()))
+            now = timer.now()
+            print('Logging, next={}'.format(timer.next_log.isoformat()))
         if timer.do_update():
             print('Update!, next={}'.format(timer.next_update.isoformat()))
 
-        time.sleep(0.5)
+        time.sleep(1.0)

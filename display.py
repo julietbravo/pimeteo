@@ -7,7 +7,7 @@ class LCD:
         self.i2c_addr = i2c_addr
         self.sm_bus = sm_bus
 
-        self.lcd_width = 20     # Width (characters) display
+        self.lcd_width = 20
 
         self.lcd_chr = 1        # Mode - Sending data
         self.lcd_cmd = 0        # Mode - Sending command
@@ -65,6 +65,7 @@ class LCD:
         for i in range(self.lcd_width):
             self.lcd_byte(ord(message[i]), self.lcd_chr)
 
+
     def align(self, var1, val1, unit1, var2, val2, unit2):
         line_0 = '{0}={1:.1f}{2}'.format(var1, val1, unit1) 
         line_1 = '{0}={1:.1f}{2}'.format(var2, val2, unit2)
@@ -72,17 +73,30 @@ class LCD:
         return '{0}{1}{2}'.format(line_0, pad, line_1)
 
 
-    def set_values(self, time, T1, T2, RH1, RH2, P, CO2):
-        line   = '  {0:02d}/{1:02d}/{2:04d} {3:02d}:{4:02d}'.format(time.day, time.month, time.year, time.hour, time.minute)
+    #def set_values(self, time, T1, T2, RH1, RH2, P, CO2):
+    #    line = '  {0:02d}/{1:02d}/{2:04d} {3:02d}:{4:02d}'.format(time.day, time.month, time.year, time.hour, time.minute)
+    #    self.write(line, 0)
+
+    #    line = self.align('T1', T1, 'C', 'RH1', RH1, '%')
+    #    self.write(line, 1)
+
+    #    line = self.align('T2', T2, 'C', 'RH2', RH2, '%')
+    #    self.write(line, 2)
+
+    #    line = self.align('P', P, '', 'CO2', CO2, '')
+    #    self.write(line, 3)
+
+    def set_values(self, time, T1, T2, T3, RH1, P, CO2):
+        line = '  {0:02d}/{1:02d}/{2:04d} {3:02d}:{4:02d}'.format(time.day, time.month, time.year, time.hour, time.minute)
         self.write(line, 0)
 
-        line   = self.align('T1', T1, 'C', 'RH1', RH1, '%')
+        line = self.align('T1', T1, 'C', 'RH1', RH1, '%')
         self.write(line, 1)
 
-        line   = self.align('T2', T2, 'C', 'RH2', RH2, '%')
+        line = self.align('T2', T2, 'C', 'T3', T3, 'C')
         self.write(line, 2)
 
-        line   = self.align('P', P, '', 'CO2', CO2, '')
+        line = self.align('P', P, '', 'CO2', CO2, '')
         self.write(line, 3)
 
 
