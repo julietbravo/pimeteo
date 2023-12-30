@@ -104,15 +104,29 @@ if __name__ == '__main__':
                 8: '00000caa2f16',
                 9: '00000ca9a207',
                 10: '00000ca98d16'}
+                11: '67a055096461',
+                12: '202b56096461',
+                13: None,
+                14: 'bbdb57096461',
+                15: 'f52e83096461',
+                16: '327b56096461',
+                17: 'ca7a54096461',
+                18: 'f6b055096461',
+                19: '9c8f83096461',
+                20: '2f8f55096461'}
 
         sensor_obj = {}
 
         for i,sid in sensor_ids.items():
-            sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, sid)
+            if sid is not None:
+                sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, sid)
+            else:
+                sensor = None
             sensor_obj[i] = sensor
 
-        for sensor in sensor_obj.values():
-            print(sensor.get_temperature())
+        for i,sensor in sensor_obj.items():
+            if sensor is not None:
+                print(i, sensor.get_temperature())
 
         #for sensor in W1ThermSensor.get_available_sensors():
         #    #print("Sensor %s has temperature %.2f" % (sensor.id, sensor.get_temperature()))
